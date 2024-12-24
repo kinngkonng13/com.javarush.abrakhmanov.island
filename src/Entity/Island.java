@@ -25,6 +25,7 @@ public class Island {
             throw new RuntimeException(e);
         }
         System.out.println(Sentence.ANIMALS_IN_LOCATION);
+        System.out.println("HI");
     }
 
 
