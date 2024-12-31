@@ -1,20 +1,23 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animal;
-import Setting.SettingsAnimal;
+import Entity.Animal.Animals;
+import Setting.SettingsAnimals;
 
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Boar extends Animal {
+public class Boar extends Animals {
     private int chanceEatCaterpillarBoar;
     public Boar() {
-        super.setSymbol(SettingsAnimal.SYMBOL_BOAR);
-        super.setWeight(SettingsAnimal.WEIGHT_BOAR);
-        super.setMaxSpeed(SettingsAnimal.MAX_SPEED_BOAR);
-        super.setMaxSatiety(SettingsAnimal.MAX_SATIETY_BOAR);
-        super.setCountOnOneCell(SettingsAnimal.COUNT_BOAR_ON_ONE_CELL);
-        super.setActualSatiety(SettingsAnimal.ACTUAL_SATIETY_BOAR);
-        super.setChanceEatCaterpillar(SettingsAnimal.CHANCE_EAT_CATERPILLAR_BOAR);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(100));
+        super.setSymbol(SettingsAnimals.SYMBOL_BOAR);
+        super.setWeight(SettingsAnimals.WEIGHT_BOAR);
+        super.setMaxSpeed(SettingsAnimals.MAX_SPEED_BOAR);
+        super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_BOAR);
+        super.setCountOnOneCell(SettingsAnimals.COUNT_BOAR_ON_ONE_CELL);
+        super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_BOAR);
+        super.setChanceEatCaterpillar(SettingsAnimals.CHANCE_EAT_CATERPILLAR_BOAR);
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomCount(ThreadLocalRandom.current().nextInt(0, SettingsAnimals.COUNT_BOAR_ON_ONE_CELL + 1));
+
     }
 }

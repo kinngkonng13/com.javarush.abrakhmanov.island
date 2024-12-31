@@ -1,19 +1,21 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animal;
-import Setting.SettingsAnimal;
+import Entity.Animal.Animals;
+import Setting.SettingsAnimals;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Horse extends Animal {
+public class Horse extends Animals {
 
     public Horse() {
-        super.setSymbol(SettingsAnimal.SYMBOL_HORSE);
-        super.setWeight(SettingsAnimal.WEIGHT_HORSE);
-        super.setMaxSpeed(SettingsAnimal.MAX_SPEED_HORSE);
-        super.setMaxSatiety(SettingsAnimal.MAX_SATIETY_HORSE);
-        super.setCountOnOneCell(SettingsAnimal.COUNT_HORSE_ON_ONE_CELL);
-        super.setActualSatiety(SettingsAnimal.ACTUAL_SATIETY_HORSE);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(100));
+        super.setSymbol(SettingsAnimals.SYMBOL_HORSE);
+        super.setWeight(SettingsAnimals.WEIGHT_HORSE);
+        super.setMaxSpeed(SettingsAnimals.MAX_SPEED_HORSE);
+        super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_HORSE);
+        super.setCountOnOneCell(SettingsAnimals.COUNT_HORSE_ON_ONE_CELL);
+        super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_HORSE);
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_HORSE_ON_ONE_CELL + 1));
+
     }
 }

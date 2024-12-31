@@ -24,7 +24,6 @@ public class Island {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(Sentence.ANIMALS_IN_LOCATION);
     }
 
 

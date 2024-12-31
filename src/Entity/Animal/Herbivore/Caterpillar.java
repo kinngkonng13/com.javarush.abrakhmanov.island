@@ -1,19 +1,20 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animal;
-import Setting.SettingsAnimal;
+import Entity.Animal.Animals;
+import Setting.SettingsAnimals;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Caterpillar extends Animal {
+public class Caterpillar extends Animals {
 
     public Caterpillar() {
-        super.setSymbol(SettingsAnimal.SYMBOL_CATERPILLAR);
-        super.setWeight(SettingsAnimal.WEIGHT_CATERPILLAR);
-        super.setMaxSpeed(SettingsAnimal.MAX_SPEED_CATERPILLAR);
-        super.setMaxSatiety(SettingsAnimal.MAX_SATIETY_CATERPILLAR);
-        super.setCountOnOneCell(SettingsAnimal.COUNT_CATERPILLAR_ON_ONE_CELL);
-        super.setActualSatiety(SettingsAnimal.ACTUAL_SATIETY_CATERPILLAR);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(100));
+        super.setSymbol(SettingsAnimals.SYMBOL_CATERPILLAR);
+        super.setWeight(SettingsAnimals.WEIGHT_CATERPILLAR);
+        super.setMaxSpeed(SettingsAnimals.MAX_SPEED_CATERPILLAR);
+        super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_CATERPILLAR);
+        super.setCountOnOneCell(SettingsAnimals.COUNT_CATERPILLAR_ON_ONE_CELL);
+        super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_CATERPILLAR);
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_CATERPILLAR_ON_ONE_CELL + 1));
     }
 }

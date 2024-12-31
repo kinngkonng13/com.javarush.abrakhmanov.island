@@ -1,16 +1,16 @@
 package Entity.Animal;
 
-import Entity.Plant.Plants;
+import Entity.Island;
+import Fabric.AnimalFactory;
 import Setting.Cell;
 import Setting.Direction;
-import Setting.Location;
 
-import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-public abstract class Animal {
+public abstract class Animals {
     /*Символ
      * Вес
      * Максимальная скорость
@@ -18,7 +18,9 @@ public abstract class Animal {
      * Фактическая сытость
      * Количество животных на одной клетке
      * Вероятности съедения животного
-     * Шанс съедения гусеницы*/
+     * Шанс съедения гусеницы
+     * Шанс появления при инициализации острова
+     * Шанс заселения на ячейку*/
     private double weight;
     private int maxSpeed;
     private double  maxSatiety;
@@ -27,7 +29,13 @@ public abstract class Animal {
     private Map<String, Integer> probabilityEaten;
     private int chanceEatCaterpillar;
     private int randomAdvent;
+    //private Random random = new Random();
+    //private int randomCount = random.nextInt(countOnOneCell + 1);
     private int randomCount;
+
+    public void setRandomCount(int randomCount) {
+        this.randomCount = randomCount;
+    }
 
     //Геттеры
     public double getWeight() {
@@ -57,8 +65,13 @@ public abstract class Animal {
     public int getChanceEatCaterpillar() {
         return chanceEatCaterpillar;
     }
+
     public int getRandomAdvent() {
         return randomAdvent;
+    }
+
+    public int getRandomCount() {
+        return randomCount;
     }
 
     //Сеттеры
@@ -92,53 +105,53 @@ public abstract class Animal {
     public void setChanceEatCaterpillar(int chanceEatCaterpillar) {
         this.chanceEatCaterpillar = chanceEatCaterpillar;
     }
+
     public void setRandomAdvent(int randomAdvent) {
         this.randomAdvent = randomAdvent;
     }
 
     //Уменьшение значения поля текущей сытости
     //Уменьшение сытости на 25%
-    public double worker(double actualSatiety)
+    public void worker()
     {
-        actualSatiety = actualSatiety - ((actualSatiety * 25.0) / 100.0);
-        return actualSatiety;
+        this.actualSatiety = this.actualSatiety - ((actualSatiety * 25.0) / 100.0);
     }
 
     //Съесть растение
     //plantsArrayList - Лист с растениями
     //Удаляется количество съеденной травы, если не превышен уровень максимальной сытости
-    public boolean eat(ArrayList<Plants> plantsArrayList, double actualSatiety, double weight)
+    public boolean eat(Cell cell)
     {
         if (actualSatiety >= maxSatiety) return false;
         else {
-            for (int i = 0; i < weight; i++)
-            {
-                plantsArrayList.remove(i);
-            }
+//            for (int i = 0; i < weight; i++)
+//            {
+//                plantsArrayList.remove(i);
+//            }
             return true;
         }
     }
 
     //Съесть животное
     //Если актуальная сытость не равна максимальной и не будет больше ее, то удаляем съеденное животное
-    public boolean eat(ArrayList<Animal> animals, Animal animal, double actualSatiety, double weight)
-    {
-        if (actualSatiety >= maxSatiety) return false;
-        else
-        {
-            if (actualSatiety + weight > maxSatiety) return false;
-            else
-            {
-                animals.remove(animal);
-                return true;
-            }
-        }
-
-    }
+//    public boolean eat(Cell cell)
+//    {
+//        if (actualSatiety >= maxSatiety) return false;
+//        else
+//        {
+//            if (actualSatiety + weight > maxSatiety) return false;
+//            else
+//            {
+//                //animals.remove(animal);
+//                return true;
+//            }
+//        }
+//
+//    }
     // Переместиться в другую локацию
-    public void move(Location location)
+    public void move(Island island)
     {
-
+        
     }
 
     //Выбрать направление
@@ -167,37 +180,38 @@ public abstract class Animal {
         return direction;
     }
     //Размножение
-    public void reproduce()
+    public void reproduce(Cell cell)
     {
+        try {
+            CopyOnWriteArrayList<Animals> listAnimal = cell.listAnimal;
+            int randomNum = ThreadLocalRandom.current().nextInt(1, 101);
+            if (randomNum >= 10) {
+                int sizeIndividual = listAnimal.stream().filter(count -> this.getClass()
+                        .equals(count.getClass())).toList().size();
+                if (sizeIndividual < 2) {
+                    return;
+                }
+                if (sizeIndividual >= countOnOneCell) {
+                    return;
+                }
+                String simpleName = this.getClass().getSimpleName();
+                listAnimal.add(AnimalFactory.giveBirthAnimal(simpleName));
+            }
+        } finally {
 
+        }
     }
     //Смерть
-    public void die(ArrayList<Animal> animals, Animal animal)
+    public void die(Animals animal, Cell cell)
     {
-        if (animals.isEmpty())
+        if (animal == null)
         {
             return;
         }
         else {
-            animals.remove(animal);
+            cell.listAnimal.remove(animal);
         }
 
-    }
-
-    public void createAnimal(Cell[][] animals)
-    {
-        if (randomAdvent == 0)
-            return;
-        else
-        {
-            for (Cell[] i : animals) {
-                for (Cell j : i) {
-                    ThreadLocalRandom.current().nextInt(0, countOnOneCell);
-                }
-
-            }
-
-        }
     }
 
 }

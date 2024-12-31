@@ -1,19 +1,21 @@
 package Entity.Animal.Predator;
 
-import Entity.Animal.Animal;
-import Setting.SettingsAnimal;
+import Entity.Animal.Animals;
+import Setting.SettingsAnimals;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Boa extends Animal {
+public class Boa extends Animals {
     public Boa() {
-        super.setSymbol(SettingsAnimal.SYMBOL_BOA);
-        super.setWeight(SettingsAnimal.WEIGHT_BOA);
-        super.setMaxSpeed(SettingsAnimal.MAX_SPEED_BOA);
-        super.setMaxSatiety(SettingsAnimal.MAX_SATIETY_BOA);
-        super.setActualSatiety(SettingsAnimal.ACTUAL_SATIETY_BOA);
-        super.setCountOnOneCell(SettingsAnimal.COUNT_BOA_ON_ONE_CELL);
-        super.setProbabilityEaten(SettingsAnimal.PROBABILITY_BEING_EATEN_BOA);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(100));
+        super.setSymbol(SettingsAnimals.SYMBOL_BOA);
+        super.setWeight(SettingsAnimals.WEIGHT_BOA);
+        super.setMaxSpeed(SettingsAnimals.MAX_SPEED_BOA);
+        super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_BOA);
+        super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_BOA);
+        super.setCountOnOneCell(SettingsAnimals.COUNT_BOA_ON_ONE_CELL);
+        super.setProbabilityEaten(SettingsAnimals.PROBABILITY_BEING_EATEN_BOA);
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_BOA_ON_ONE_CELL + 1));
+
     }
 }

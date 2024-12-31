@@ -1,19 +1,21 @@
 package Entity.Animal.Predator;
 
-import Entity.Animal.Animal;
-import Setting.SettingsAnimal;
+import Entity.Animal.Animals;
+import Setting.SettingsAnimals;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Eagle extends Animal {
+public class Eagle extends Animals {
     public Eagle() {
-        super.setSymbol(SettingsAnimal.SYMBOL_EAGLE);
-        super.setWeight(SettingsAnimal.WEIGHT_EAGLE);
-        super.setMaxSpeed(SettingsAnimal.MAX_SPEED_EAGLE);
-        super.setMaxSatiety(SettingsAnimal.MAX_SATIETY_EAGLE);
-        super.setActualSatiety(SettingsAnimal.ACTUAL_SATIETY_EAGLE);
-        super.setCountOnOneCell(SettingsAnimal.COUNT_EAGLE_ON_ONE_CELL);
-        super.setProbabilityEaten(SettingsAnimal.PROBABILITY_BEING_EATEN_EAGLE);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(100));
+        super.setSymbol(SettingsAnimals.SYMBOL_EAGLE);
+        super.setWeight(SettingsAnimals.WEIGHT_EAGLE);
+        super.setMaxSpeed(SettingsAnimals.MAX_SPEED_EAGLE);
+        super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_EAGLE);
+        super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_EAGLE);
+        super.setCountOnOneCell(SettingsAnimals.COUNT_EAGLE_ON_ONE_CELL);
+        super.setProbabilityEaten(SettingsAnimals.PROBABILITY_BEING_EATEN_EAGLE);
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_EAGLE_ON_ONE_CELL + 1));
+
     }
 }

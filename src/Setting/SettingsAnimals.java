@@ -1,10 +1,16 @@
 package Setting;
 
-import java.util.Map;
+import Entity.Animal.Animals;
+
+
+import Entity.Animal.Predator.*;
+import Entity.Animal.Herbivore.*;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class SettingsAnimal {
+public class SettingsAnimals {
     public static final String SYMBOL_WOLF = "\uD83D\uDC3A";
     public static final double WEIGHT_WOLF = 50;
     public static final int MAX_SPEED_WOLF = 3;
@@ -153,4 +159,13 @@ public class SettingsAnimal {
                             {"Rabbit", 2.0}, {"Mouse", 0.05}, {"Goat", 60.0}, {"Sheep", 70.0}, {"Boar", 400.0}, {"Buffalo", 700.0},
                             {"Duck", 1.0}, {"Caterpillar", 0.01}, {"Bear", 500.0}})
             .collect(Collectors.toMap(data -> (String) data[0], data -> (Double) data[1]));
+    //Все животные в списке
+   // public static final ArrayList<Animal> ALL_ANIMALS = Stream.of({Rabbit}, {Caterpillar}, {Bear}, {Fox}, {Deer}, {Mouse},
+                                                        //{Boa}, {Horse}, {Sheep}, {Duck}, {Goat}, {Wolf}, {Eagle}, {Buffalo}).collect(Collectors.toList();
+   // public static final ArrayList<Animal> ALL_ANIMALS = new ArrayList<Animal>();
+
+    public static final Animals[] ALL_ANIMALS = new Animals[]{new Boar(), new Rabbit(), new Caterpillar(), new Bear(), new Fox(), new Deer(), new Mouse(),
+                                                new Boa(), new Horse(), new Sheep(), new Duck(), new Wolf(), new Goat(), new Eagle(), new Buffalo()};
+
+    public static final int[] COUNT_ON_CELL_ALL_ANIMALS = new int[]{50, 150, 1000, 5, 30, 20, 500, 30, 20, 140, 200, 30, 140, 20, 10};
 }

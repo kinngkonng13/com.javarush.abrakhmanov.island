@@ -1,19 +1,21 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animal;
-import Setting.SettingsAnimal;
+import Entity.Animal.Animals;
+import Setting.SettingsAnimals;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Goat extends Animal {
+public class Goat extends Animals {
 
     public Goat() {
-        super.setSymbol(SettingsAnimal.SYMBOL_GOAT);
-        super.setWeight(SettingsAnimal.WEIGHT_GOAT);
-        super.setMaxSpeed(SettingsAnimal.MAX_SPEED_GOAT);
-        super.setMaxSatiety(SettingsAnimal.MAX_SATIETY_GOAT);
-        super.setCountOnOneCell(SettingsAnimal.COUNT_GOAT_ON_ONE_CELL);
-        super.setActualSatiety(SettingsAnimal.ACTUAL_SATIETY_GOAT);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(100));
+        super.setSymbol(SettingsAnimals.SYMBOL_GOAT);
+        super.setWeight(SettingsAnimals.WEIGHT_GOAT);
+        super.setMaxSpeed(SettingsAnimals.MAX_SPEED_GOAT);
+        super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_GOAT);
+        super.setCountOnOneCell(SettingsAnimals.COUNT_GOAT_ON_ONE_CELL);
+        super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_GOAT);
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_GOAT_ON_ONE_CELL + 1));
+
     }
 }

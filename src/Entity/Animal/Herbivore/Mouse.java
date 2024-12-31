@@ -1,21 +1,22 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animal;
-import Setting.SettingsAnimal;
+import Entity.Animal.Animals;
+import Setting.SettingsAnimals;
 
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Mouse extends Animal {
+public class Mouse extends Animals {
 
     public Mouse() {
-        super.setSymbol(SettingsAnimal.SYMBOL_MOUSE);
-        super.setWeight(SettingsAnimal.WEIGHT_MOUSE);
-        super.setMaxSpeed(SettingsAnimal.MAX_SPEED_MOUSE);
-        super.setMaxSatiety(SettingsAnimal.MAX_SATIETY_MOUSE);
-        super.setCountOnOneCell(SettingsAnimal.COUNT_MOUSE_ON_ONE_CELL);
-        super.setActualSatiety(SettingsAnimal.ACTUAL_SATIETY_MOUSE);
-        super.setChanceEatCaterpillar(SettingsAnimal.CHANCE_EAT_CATERPILLAR_MOUSE);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(100));
+        super.setSymbol(SettingsAnimals.SYMBOL_MOUSE);
+        super.setWeight(SettingsAnimals.WEIGHT_MOUSE);
+        super.setMaxSpeed(SettingsAnimals.MAX_SPEED_MOUSE);
+        super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_MOUSE);
+        super.setCountOnOneCell(SettingsAnimals.COUNT_MOUSE_ON_ONE_CELL);
+        super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_MOUSE);
+        super.setChanceEatCaterpillar(SettingsAnimals.CHANCE_EAT_CATERPILLAR_MOUSE);
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_MOUSE_ON_ONE_CELL + 1));
+
     }
 }
