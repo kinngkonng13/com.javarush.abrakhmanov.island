@@ -21,8 +21,10 @@ public class Island {
 
         try {
             Thread.sleep(500);
+            System.out.println(Sentence.ANIMALS_IN_LOCATION);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("WAIT!!! BUUUUUG!!!");
         }
     }
 

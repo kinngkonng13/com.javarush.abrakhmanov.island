@@ -5,7 +5,7 @@ import Entity.Plant.Plants;
 
 public class PlantsWorker implements Runnable{
     Island island;
-    int maxCountPlant = 3;
+    int maxCountPlant = Plants.maxCountPlant;
 
     public PlantsWorker(Island island) {
         this.island = island;
@@ -16,7 +16,7 @@ public class PlantsWorker implements Runnable{
         try {
             plantGrowth();
         } catch (Exception e) {
-            System.err.println("OMG. Debug it!");
+            System.err.println("OMG! Debug it!");
             System.exit(0);
         }
     }

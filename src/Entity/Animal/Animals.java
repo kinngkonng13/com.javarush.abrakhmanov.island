@@ -8,6 +8,8 @@ import Setting.Direction;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public abstract class Animals {
@@ -23,15 +25,14 @@ public abstract class Animals {
      * Шанс заселения на ячейку*/
     private double weight;
     private int maxSpeed;
-    private double  maxSatiety;
-    private double actualSatiety;
+    protected double  maxSatiety;
+    protected double actualSatiety;
     private int countOnOneCell;
     private Map<String, Integer> probabilityEaten;
     private int chanceEatCaterpillar;
     private int randomAdvent;
-    //private Random random = new Random();
-    //private int randomCount = random.nextInt(countOnOneCell + 1);
     private int randomCount;
+    Lock lock = new ReentrantLock();
 
     public void setRandomCount(int randomCount) {
         this.randomCount = randomCount;
@@ -114,7 +115,9 @@ public abstract class Animals {
     //Уменьшение сытости на 25%
     public void worker()
     {
-        this.actualSatiety = this.actualSatiety - ((actualSatiety * 25.0) / 100.0);
+        lock.lock();
+        this.actualSatiety = this.actualSatiety - (actualSatiety * 0.25);
+        lock.unlock();
     }
 
     //Съесть растение
@@ -124,34 +127,62 @@ public abstract class Animals {
     {
         if (actualSatiety >= maxSatiety) return false;
         else {
-//            for (int i = 0; i < weight; i++)
-//            {
-//                plantsArrayList.remove(i);
-//            }
             return true;
         }
     }
 
-    //Съесть животное
-    //Если актуальная сытость не равна максимальной и не будет больше ее, то удаляем съеденное животное
-//    public boolean eat(Cell cell)
-//    {
-//        if (actualSatiety >= maxSatiety) return false;
-//        else
-//        {
-//            if (actualSatiety + weight > maxSatiety) return false;
-//            else
-//            {
-//                //animals.remove(animal);
-//                return true;
-//            }
-//        }
-//
-//    }
     // Переместиться в другую локацию
     public void move(Island island)
     {
-        
+        lock.lock();
+        try {
+            Cell[][] islandArrays = island.islandArray;
+            for (int i = 0; i < islandArrays.length; i++) {
+                for (int j = 0; j < islandArrays.length; j++) {
+                    if (islandArrays[i][j].listAnimal.contains(this)) {
+                        int randomStep = ThreadLocalRandom.current().nextInt(0, this.maxSpeed + 1);
+                        int randomDirection = ThreadLocalRandom.current().nextInt(1, 9);
+                        int newI = i;
+                        int newJ = j;
+                        switch (randomDirection) {
+                            case 1 -> newI -= randomStep; // Вверх
+                            case 2 -> {
+                                newI -= randomStep;
+                                newJ += randomStep;
+                            } // Вверх вправо
+                            case 3 -> newJ += randomStep; // Вправо
+                            case 4 -> {
+                                newI += randomStep;
+                                newJ += randomStep;
+                            } // Вниз вправо
+                            case 5 -> newI += randomStep; // Вниз
+                            case 6 -> {
+                                newI += randomStep;
+                                newJ -= randomStep;
+                            } // Вниз влево
+                            case 7 -> newJ -= randomStep; // Влево
+                            case 8 -> {
+                                newI -= randomStep;
+                                newJ -= randomStep;
+                            } // Вверх влево
+                        }
+                        newI = (newI + islandArrays.length) % islandArrays.length;
+                        newJ = (newJ + islandArrays[i].length) % islandArrays[i].length;
+                        int sizeAnimal = islandArrays[newI][newJ].listAnimal.stream().filter(animal -> this.getClass()
+                                .equals(animal.getClass())).toList().size();
+                        if (sizeAnimal >= this.countOnOneCell) {
+                            return;
+                        }
+                        islandArrays[newI][newJ].listAnimal.add(this);
+                        islandArrays[i][j].listAnimal.remove(this);
+                        return;
+                    }
+                }
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+        } finally {
+            lock.unlock();
+        }
     }
 
     //Выбрать направление
@@ -182,6 +213,7 @@ public abstract class Animals {
     //Размножение
     public void reproduce(Cell cell)
     {
+        lock.lock();
         try {
             CopyOnWriteArrayList<Animals> listAnimal = cell.listAnimal;
             int randomNum = ThreadLocalRandom.current().nextInt(1, 101);
@@ -198,18 +230,19 @@ public abstract class Animals {
                 listAnimal.add(AnimalFactory.giveBirthAnimal(simpleName));
             }
         } finally {
-
+            lock.unlock();
         }
     }
     //Смерть
     public void die(Animals animal, Cell cell)
     {
-        if (animal == null)
-        {
-            return;
-        }
-        else {
-            cell.listAnimal.remove(animal);
+        lock.lock();
+        try {
+            if (this.actualSatiety <= 0) {
+                cell.listAnimal.remove(animal);
+            }
+        } finally {
+            lock.unlock();
         }
 
     }

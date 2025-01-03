@@ -2,10 +2,11 @@ package Entity.Animal.Herbivore;
 
 import Entity.Animal.Animals;
 import Setting.SettingsAnimals;
+import Setting.SettingsIsland;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Horse extends Animals {
+public class Horse extends Herbivore {
 
     public Horse() {
         super.setSymbol(SettingsAnimals.SYMBOL_HORSE);
@@ -14,7 +15,7 @@ public class Horse extends Animals {
         super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_HORSE);
         super.setCountOnOneCell(SettingsAnimals.COUNT_HORSE_ON_ONE_CELL);
         super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_HORSE);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, SettingsIsland.getChanceCreating() + 1));
         super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_HORSE_ON_ONE_CELL + 1));
 
     }

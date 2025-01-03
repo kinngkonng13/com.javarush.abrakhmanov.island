@@ -2,10 +2,11 @@ package Entity.Animal.Herbivore;
 
 import Entity.Animal.Animals;
 import Setting.SettingsAnimals;
+import Setting.SettingsIsland;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Mouse extends Animals {
+public class Mouse extends Herbivore {
 
     public Mouse() {
         super.setSymbol(SettingsAnimals.SYMBOL_MOUSE);
@@ -15,7 +16,7 @@ public class Mouse extends Animals {
         super.setCountOnOneCell(SettingsAnimals.COUNT_MOUSE_ON_ONE_CELL);
         super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_MOUSE);
         super.setChanceEatCaterpillar(SettingsAnimals.CHANCE_EAT_CATERPILLAR_MOUSE);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, SettingsIsland.getChanceCreating() + 1));
         super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_MOUSE_ON_ONE_CELL + 1));
 
     }

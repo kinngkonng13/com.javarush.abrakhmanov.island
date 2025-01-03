@@ -2,10 +2,11 @@ package Entity.Animal.Predator;
 
 import Entity.Animal.Animals;
 import Setting.SettingsAnimals;
+import Setting.SettingsIsland;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Eagle extends Animals {
+public class Eagle extends Predator {
     public Eagle() {
         super.setSymbol(SettingsAnimals.SYMBOL_EAGLE);
         super.setWeight(SettingsAnimals.WEIGHT_EAGLE);
@@ -14,7 +15,7 @@ public class Eagle extends Animals {
         super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_EAGLE);
         super.setCountOnOneCell(SettingsAnimals.COUNT_EAGLE_ON_ONE_CELL);
         super.setProbabilityEaten(SettingsAnimals.PROBABILITY_BEING_EATEN_EAGLE);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, 2));
+        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, SettingsIsland.getChanceCreating() + 1));
         super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_EAGLE_ON_ONE_CELL + 1));
 
     }

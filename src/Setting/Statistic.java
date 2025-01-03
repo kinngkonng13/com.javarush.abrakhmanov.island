@@ -6,12 +6,7 @@ import Entity.Animal.Predator.*;
 import java.util.Arrays;
 
 public class Statistic {
-    private static int countNumberAnimal = 0;
-
-    public static int getCountNumberAnimal() {
-        return countNumberAnimal;
-    }
-
+    // Вывод статистики на экран
     public static void collectingStatistics(Island island) {
 
         int sizePlant = Arrays.stream(island.islandArray).flatMap(Arrays::stream).mapToInt(cell -> cell.listPlant.size()).sum();
@@ -62,15 +57,22 @@ public class Statistic {
                 + " || " + SettingsAnimals.SYMBOL_BOAR + ": " + sizeBoar
                 + " || " + SettingsAnimals.SYMBOL_CATERPILLAR + ": " + sizeCaterpillar + "\n");
 
-        countNumberAnimal = sizeBoar + sizeBear + sizeCaterpillar + sizeBoa + sizeBuffalo + sizeBuffalo + sizeDeer + sizeDuck
-                + sizeEagle + sizeFox + sizeGoat + sizeHorse + sizeMouse + sizeRabbit + sizeSheep + sizeWolf;
-        //System.out.print( "Plant: " + sizePlant + "||" + "Herbivore: " + "\n");
+        int sizePredator = Arrays.stream(island.islandArray).flatMap(Arrays::stream).flatMap(cell -> cell.listAnimal.stream())
+                .filter(c -> c instanceof Predator).map(c -> (Predator) c).toList().size();
+        int sizeHerbivore = Arrays.stream(island.islandArray).flatMap(Arrays::stream).flatMap(cell -> cell.listAnimal.stream())
+                .filter(c -> c instanceof Herbivore).map(c -> (Herbivore) c).toList().size();
+        System.out.print( "Plants: " + sizePlant + "||" + "Herbivore: " + sizeHerbivore + "||" + "Predator: " + sizePredator + "\n");
+
+
     }
-    //public static int countNumberAnimal(Island island) {
-     //   int sizePredator =
-    //    int sizeHerbivore = Arrays.stream(island.islandArrays).flatMap(Arrays::stream).flatMap(cell -> cell.listAnimal.stream())
-     //           .filter(c -> c instanceof Herbivore).map(c -> (Herbivore) c).toList().size();
-     //   return sizeHerbivore + sizePredator;
-    //}
+    // Функция возвращает общее количество хищников и травоядных
+    public static int countNumberAnimal(Island island) {
+        int sizePredator = Arrays.stream(island.islandArray).flatMap(Arrays::stream).flatMap(cell -> cell.listAnimal.stream())
+                .filter(c -> c instanceof Predator).map(c -> (Predator) c).toList().size();
+        int sizeHerbivore = Arrays.stream(island.islandArray).flatMap(Arrays::stream).flatMap(cell -> cell.listAnimal.stream())
+                .filter(c -> c instanceof Herbivore).map(c -> (Herbivore) c).toList().size();
+        return sizeHerbivore + sizePredator;
+    }
+
 }
 

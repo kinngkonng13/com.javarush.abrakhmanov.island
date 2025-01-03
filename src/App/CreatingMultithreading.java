@@ -18,16 +18,16 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class CreatingMultithreading {
-    public ScheduledExecutorService executorSimulationService;
-    public ExecutorService serviceForCreaturesWorker;
-    public ScheduledExecutorService executorServicePlant;
-    Island island;
+    private ScheduledExecutorService executorSimulationService;
+    private ExecutorService serviceForCreaturesWorker;
+    private ScheduledExecutorService executorServicePlant;
+    private Island island;
 
     public CreatingMultithreading(Island island) {
         this.island = island;
-        this.executorSimulationService = Executors.newScheduledThreadPool(SettingsIsland.countThreadShed);
-        this.serviceForCreaturesWorker = Executors.newFixedThreadPool(SettingsIsland.countThread);
-        this.executorServicePlant = Executors.newScheduledThreadPool(SettingsIsland.countThreadShedPlant);
+        this.executorSimulationService = Executors.newScheduledThreadPool(SettingsIsland.getCountThreadShed());
+        this.serviceForCreaturesWorker = Executors.newFixedThreadPool(SettingsIsland.getCountThread());
+        this.executorServicePlant = Executors.newScheduledThreadPool(SettingsIsland.getCountThreadShedPlant());
     }
 
     public void islandStartLive() {
@@ -38,13 +38,12 @@ public class CreatingMultithreading {
     private void lifeCycle() {
         AnimalWorker animalWorker = new AnimalWorker(island);
         serviceForCreaturesWorker.execute(animalWorker);
-        int stop = SettingsIsland.longCycle;
-        if (Statistic.getCountNumberAnimal() == 0 || AnimalWorker.countDay.get() == stop) {
-            stopSimulation();
+        if (Statistic.countNumberAnimal(island) == 0) {
+           stopSimulation();
         }
-    }
+ }
 
-    public void stopSimulation() {
+    private void stopSimulation() {
         serviceForCreaturesWorker.shutdown();
         try {
             if (!serviceForCreaturesWorker.awaitTermination(1, TimeUnit.SECONDS)) {
