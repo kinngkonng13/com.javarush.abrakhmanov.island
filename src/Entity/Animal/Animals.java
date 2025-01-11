@@ -127,63 +127,6 @@ public abstract class Animals implements Cloneable {
         return true;
     }
 
-    private double consumePlants(Cell cell, double requiredFood) {
-        double consumed = 0;
-
-        Iterator<Plants> iterator = cell.listPlant.iterator();
-        while (iterator.hasNext() && requiredFood > 0) {
-            Plants plant = iterator.next();
-            double available = plant.getWeight();
-
-            if (available <= requiredFood) {
-                consumed += available;
-                requiredFood -= available;
-                iterator.remove();
-                System.out.println(this.getClass().getSimpleName() + " съел растение весом " + available);
-
-            } else {
-                consumed += requiredFood;
-                plant.setWeight((int) (available - requiredFood));
-                System.out.println(this.getClass().getSimpleName() + " съел часть растения весом " + requiredFood);
-                requiredFood = 0;
-
-            }
-        }
-
-        if (consumed == 0) {
-            System.out.println(this.getClass().getSimpleName() + " не нашел растений для еды.");
-        }
-
-        return consumed;
-    }
-
-    private double huntAnimals(Cell cell, double requiredFood) {
-        double consumed = 0;
-
-        Iterator<Animals> iterator = cell.listAnimal.iterator();
-        while (iterator.hasNext() && requiredFood > 0) {
-            Animals prey = iterator.next();
-
-            // Проверяем вероятность поедания
-            Integer chance = this.getProbabilityEaten().get(prey.getClass().getSimpleName());
-            if (chance != null && ThreadLocalRandom.current().nextInt(100) < chance) {
-                consumed += prey.getWeight();
-                iterator.remove(); // Жертва съедена
-                requiredFood -= prey.getWeight();
-                System.out.println(this.getClass().getSimpleName() + " съел " + prey.getClass().getSimpleName()
-                        + " весом " + prey.getWeight());
-            } else {
-                System.out.println(this.getClass().getSimpleName() + " не смог поймать " + prey.getClass().getSimpleName());
-            }
-        }
-
-        if (consumed == 0) {
-            System.out.println(this.getClass().getSimpleName() + " не нашел животных для еды.");
-        }
-
-        return consumed;
-    }
-
     // Переместиться в другую локацию
     public void move(Island island) {
         lock.lock();
