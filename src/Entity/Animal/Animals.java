@@ -1,12 +1,10 @@
 package Entity.Animal;
 
 import Entity.Island;
-import Entity.Plant.Plants;
 import Fabric.AnimalFactory;
 import Setting.Cell;
 import Setting.Direction;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
@@ -192,20 +190,20 @@ public abstract class Animals implements Cloneable {
                     .count();
 
             if (countSameAnimals >= countOnOneCell) {
-                System.out.println(this.getClass().getSimpleName() + ": Клетка переполнена для этого типа.");
+                //System.out.println(this.getClass().getSimpleName() + ": Клетка переполнена для этого типа.");
                 return;
             }
 
             int randomNum = ThreadLocalRandom.current().nextInt(1, 101);
             if (randomNum < 50) { // Шанс на размножение 50%
-                System.out.println(this.getClass().getSimpleName() + ": Шанс на размножение не выпал.");
+                //System.out.println(this.getClass().getSimpleName() + ": Шанс на размножение не выпал.");
                 return;
             }
 
             Animals baby = AnimalFactory.giveBirthAnimal(this.getClass().getSimpleName());
             if (baby != null) {
                 cell.listAnimal.add(baby);
-                System.out.println(this.getClass().getSimpleName() + ": Успешное размножение. Рождено новое животное.");
+                //System.out.println(this.getClass().getSimpleName() + ": Успешное размножение. Рождено новое животное.");
             } else {
                 System.err.println("Ошибка при создании потомства для: " + this.getClass().getSimpleName());
             }

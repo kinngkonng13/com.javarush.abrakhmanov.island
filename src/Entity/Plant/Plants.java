@@ -10,15 +10,8 @@ public class Plants {
         return weight;
     }
 
-    public static void setWeight(int weight) {
-        Plants.weight = weight;
-    }
 
     public static double getWeightPlant() {
         return weightPlant;
-    }
-
-    public static void setWeightPlant(int weightPlant) {
-        Plants.weightPlant = weightPlant;
     }
 }

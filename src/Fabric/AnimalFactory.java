@@ -24,7 +24,7 @@ public class AnimalFactory {
             case "Horse" -> animalBaby = new Horse();
             case "Mouse" -> animalBaby = new Mouse();
         }
-        System.out.println("Создалось новое животное");
+       // System.out.println("Создалось новое животное");
         return animalBaby;
     }
 }
