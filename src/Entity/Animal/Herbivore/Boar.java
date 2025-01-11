@@ -1,10 +1,8 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animals;
 import Setting.SettingsAnimals;
 import Setting.SettingsIsland;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Boar extends Herbivore {
@@ -17,7 +15,6 @@ public class Boar extends Herbivore {
         super.setCountOnOneCell(SettingsAnimals.COUNT_BOAR_ON_ONE_CELL);
         super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_BOAR);
         super.setChanceEatCaterpillar(SettingsAnimals.CHANCE_EAT_CATERPILLAR_BOAR);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, SettingsIsland.getChanceCreating() + 1));
         super.setRandomCount(ThreadLocalRandom.current().nextInt(0, SettingsAnimals.COUNT_BOAR_ON_ONE_CELL + 1));
 
     }

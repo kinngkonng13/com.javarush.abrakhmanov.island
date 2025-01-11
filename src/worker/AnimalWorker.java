@@ -1,18 +1,23 @@
 package worker;
 
+import Entity.Animal.Animals;
 import Entity.Island;
 import Setting.Cell;
 import Setting.Statistic;
 
+import java.util.Arrays;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class AnimalWorker implements Runnable {
-    Island island;
+    private final Island island;
     public static final AtomicInteger countDay = new AtomicInteger(1);
-    private final Queue<Task> tasks = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<Task> tasks = new ConcurrentLinkedQueue<>();
+    private static final ForkJoinPool pool = new ForkJoinPool(); // Пул потоков для параллельной обработки
 
     public AnimalWorker(Island island) {
         this.island = island;
@@ -20,38 +25,39 @@ public class AnimalWorker implements Runnable {
 
     @Override
     public void run() {
-        Cell[][] cell = island.islandArray;
-        for (Cell[] cells : cell) {
-            for (Cell cell1 : cells) {
-                CountDownLatch latch = new CountDownLatch(1);
-                try {
-                    processOneCell(cell1);
-                } catch (Exception e) {
-                    System.err.println("Error");
-                    System.exit(0);
-                } finally {
-                    latch.countDown();
+        // Параллельная обработка строк острова
+        pool.submit(() -> {
+            Arrays.stream(island.islandArray).parallel().forEach(cells -> {
+                for (Cell cell : cells) {
+                    processCell(cell);
                 }
-                try {
-                    latch.await();
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }
-        }
+            });
+        }).join();
+
+        // Логирование дня и статистики
         System.out.println("День: " + countDay.getAndIncrement());
         Statistic.collectingStatistics(island);
         System.out.println();
     }
 
-    public void processOneCell(Cell cell) {
-        cell.lock.lock();
-        try {
-            cell.listAnimal.forEach(animal -> tasks.add(new Task(animal, cell, island)));
-        } finally {
-            cell.lock.unlock();
+    private void processCell(Cell cell) {
+        CopyOnWriteArrayList<Animals> animalList = cell.listAnimal;
+
+        for (Animals animal : animalList) {
+            try {
+                // Создаем задачу для каждого животного и выполняем её
+                Task task = new Task(animal, cell, island);
+                task.doTask();
+                logAnimalAction(animal, "Выполнил задачу");
+            } catch (Exception e) {
+                System.err.println("Ошибка при выполнении задачи для животного: " + animal.getClass().getSimpleName());
+                e.printStackTrace();
+            }
         }
-        tasks.forEach(Task::doTask);
-        tasks.clear();
+    }
+
+    // Логирование действий животных
+    private void logAnimalAction(Animals animal, String message) {
+        //System.out.println(animal.getClass().getSimpleName() + ": " + message);
     }
 }

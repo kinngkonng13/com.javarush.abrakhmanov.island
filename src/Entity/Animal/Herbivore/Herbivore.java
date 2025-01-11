@@ -3,7 +3,7 @@ package Entity.Animal.Herbivore;
 import Entity.Animal.Animals;
 import Setting.Cell;
 import Entity.Plant.Plants;
-import Setting.SettingsAnimals;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -24,7 +24,7 @@ public abstract class Herbivore extends Animals {
                 return false;
             }
             for (Plants plant : listPlant) {
-                int weightPlant = Plants.weight;
+                int weightPlant = (int) Plants.getWeightPlant();
                 if (weightPlant > maxSatiety) {
                     actualSatiety = maxSatiety;
                     cell.listPlant.remove(plant);

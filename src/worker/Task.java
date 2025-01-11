@@ -16,11 +16,21 @@ public class Task {
     }
 
     public void doTask() {
+        // Уменьшение сытости
         animal.worker();
-        if (animal.eat(cell)){
+
+        // Попытка поесть
+        boolean ate = animal.eat(cell);
+
+        // Размножение (если поел)
+        if (ate) {
             animal.reproduce(cell);
         }
-        animal.die(animal, cell);
+
+        // Проверка на смерть
+        animal.die(cell);
+
+        // Перемещение
         animal.move(island);
     }
 }

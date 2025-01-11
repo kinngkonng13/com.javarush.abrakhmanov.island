@@ -1,6 +1,6 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animals;
+
 import Setting.SettingsAnimals;
 import Setting.SettingsIsland;
 
@@ -15,7 +15,6 @@ public class Deer extends Herbivore {
         super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_DEER);
         super.setCountOnOneCell(SettingsAnimals.COUNT_DEER_ON_ONE_CELL);
         super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_DEER);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, SettingsIsland.getChanceCreating() + 1));
         super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_DEER_ON_ONE_CELL + 1));
     }
 }

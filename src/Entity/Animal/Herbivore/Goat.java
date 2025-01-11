@@ -1,6 +1,5 @@
 package Entity.Animal.Herbivore;
 
-import Entity.Animal.Animals;
 import Setting.SettingsAnimals;
 import Setting.SettingsIsland;
 
@@ -15,7 +14,6 @@ public class Goat extends Herbivore {
         super.setMaxSatiety(SettingsAnimals.MAX_SATIETY_GOAT);
         super.setCountOnOneCell(SettingsAnimals.COUNT_GOAT_ON_ONE_CELL);
         super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_GOAT);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, SettingsIsland.getChanceCreating() + 1));
         super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_GOAT_ON_ONE_CELL + 1));
 
     }

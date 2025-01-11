@@ -1,6 +1,5 @@
 package Entity.Animal.Predator;
 
-import Entity.Animal.Animals;
 import Setting.SettingsAnimals;
 import Setting.SettingsIsland;
 
@@ -15,7 +14,6 @@ public class Bear extends Predator {
         super.setActualSatiety(SettingsAnimals.ACTUAL_SATIETY_BEAR);
         super.setCountOnOneCell(SettingsAnimals.COUNT_BEAR_ON_ONE_CELL);
         super.setProbabilityEaten(SettingsAnimals.PROBABILITY_BEING_EATEN_BEAR);
-        super.setRandomAdvent(ThreadLocalRandom.current().nextInt(0, SettingsIsland.getChanceCreating() + 1));
         super.setRandomCount(ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_BEAR_ON_ONE_CELL + 1));
 
     }

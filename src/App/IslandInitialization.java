@@ -1,8 +1,6 @@
 package App;
 
 import Entity.Animal.Animals;
-import Entity.Animal.Herbivore.Herbivore;
-import Entity.Animal.Predator.Predator;
 import Entity.Island;
 import Entity.Plant.Plants;
 import Setting.Cell;
@@ -10,7 +8,6 @@ import Setting.SettingsAnimals;
 
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static Setting.SettingsAnimals.ALL_ANIMALS;
@@ -18,47 +15,43 @@ import static Setting.SettingsAnimals.ALL_ANIMALS;
 
 public class IslandInitialization {
 
-    // Метод заполняет ячейки Cell животными и растениями
-    public static void start (Island island) {
-
+    // Инициализирует остров, заполняя его ячейки животными и растениями
+    public static void start(Island island) {
         for (int i = 0; i < island.islandArray.length; i++) {
             for (int j = 0; j < island.islandArray[i].length; j++) {
                 Cell cell = new Cell();
                 cell.listPlant.addAll(createPlant());
                 for (int k = 0; k < ALL_ANIMALS.length; k++) {
-                    cell.listAnimal.addAll(createAnimal(ALL_ANIMALS[k]));
+                    cell.listAnimal.addAll(createAnimal(ALL_ANIMALS[k], SettingsAnimals.COUNT_ON_CELL_ALL_ANIMALS[k]));
                 }
                 island.islandArray[i][j] = cell;
             }
         }
+        System.out.println("Остров успешно инициализирован.");
     }
 
-    // Создает рандомным образом животных
-    public static List<Animals> createAnimal(Animals animal)
-    {
-        List<Animals> animals = new CopyOnWriteArrayList<>();
-        if(animal.getRandomAdvent() == 0);
-        else {
-
-            for(int i = 0; i < ThreadLocalRandom.current().nextInt(SettingsAnimals.COUNT_ON_CELL_ALL_ANIMALS[i]); i++)
-            {
-                animals.add(animal);
+    // Создаёт случайное количество животных указанного типа
+    public static List<Animals> createAnimal(Animals prototype, int maxCount) {
+        List<Animals> animals = new ArrayList<>();
+        for (int i = 0; i < ThreadLocalRandom.current().nextInt(maxCount); i++) {
+            try {
+                // Используем клон, чтобы создать независимый объект
+                animals.add((Animals) prototype.clone());
+            } catch (CloneNotSupportedException e) {
+                e.printStackTrace();
             }
         }
         return animals;
     }
 
-    public static List<Plants> createPlant()
-    {
-        Random random = new Random();
-        int randomPlants = random.nextInt(Plants.maxCountPlant);
+    // Создаёт случайное количество растений
+    public static List<Plants> createPlant() {
         List<Plants> plants = new ArrayList<>();
-        for (int i = 0; i < randomPlants; i++)
-        {
-            plants.add(i, new Plants());
+        int randomPlants = ThreadLocalRandom.current().nextInt((int) Plants.maxCountPlant);
+        for (int i = 0; i < randomPlants; i++) {
+            plants.add(new Plants());
         }
         return plants;
     }
-
 }
 

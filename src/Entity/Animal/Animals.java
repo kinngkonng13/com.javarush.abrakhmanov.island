@@ -1,18 +1,19 @@
 package Entity.Animal;
 
 import Entity.Island;
+import Entity.Plant.Plants;
 import Fabric.AnimalFactory;
 import Setting.Cell;
 import Setting.Direction;
 
+import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 
-public abstract class Animals {
+public abstract class Animals implements Cloneable {
     /*Символ
      * Вес
      * Максимальная скорость
@@ -22,7 +23,8 @@ public abstract class Animals {
      * Вероятности съедения животного
      * Шанс съедения гусеницы
      * Шанс появления при инициализации острова
-     * Шанс заселения на ячейку*/
+     * Шанс заселения на ячейку
+     * Символ животного */
     private double weight;
     private int maxSpeed;
     protected double  maxSatiety;
@@ -30,8 +32,8 @@ public abstract class Animals {
     private int countOnOneCell;
     private Map<String, Integer> probabilityEaten;
     private int chanceEatCaterpillar;
-    private int randomAdvent;
     private int randomCount;
+    private String symbol;
     Lock lock = new ReentrantLock();
 
     public void setRandomCount(int randomCount) {
@@ -67,13 +69,6 @@ public abstract class Animals {
         return chanceEatCaterpillar;
     }
 
-    public int getRandomAdvent() {
-        return randomAdvent;
-    }
-
-    public int getRandomCount() {
-        return randomCount;
-    }
 
     //Сеттеры
     public void setProbabilityEaten(Map<String, Integer> probabilityBeingEatenWolf) {
@@ -81,7 +76,7 @@ public abstract class Animals {
     }
 
     public void setCountOnOneCell(int countOnOneCell) {
-        countOnOneCell = countOnOneCell;
+        this.countOnOneCell = countOnOneCell;
     }
 
     public void setActualSatiety(double actualSatiety) {
@@ -101,150 +96,193 @@ public abstract class Animals {
     }
 
     public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
 
     public void setChanceEatCaterpillar(int chanceEatCaterpillar) {
         this.chanceEatCaterpillar = chanceEatCaterpillar;
     }
 
-    public void setRandomAdvent(int randomAdvent) {
-        this.randomAdvent = randomAdvent;
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     //Уменьшение значения поля текущей сытости
     //Уменьшение сытости на 25%
-    public void worker()
-    {
+    public void worker() {
         lock.lock();
-        this.actualSatiety = this.actualSatiety - (actualSatiety * 0.25);
-        lock.unlock();
+        try {
+            this.actualSatiety -= (maxSatiety * 0.25);
+        } finally {
+            lock.unlock();
+        }
     }
 
     //Съесть растение
-    //plantsArrayList - Лист с растениями
-    //Удаляется количество съеденной травы, если не превышен уровень максимальной сытости
-    public boolean eat(Cell cell)
-    {
-        if (actualSatiety >= maxSatiety) return false;
-        else {
-            return true;
+    public boolean eat(Cell cell) {
+        if (actualSatiety >= maxSatiety) {
+            return false; // Животное сыто
         }
+        return true;
+    }
+
+    private double consumePlants(Cell cell, double requiredFood) {
+        double consumed = 0;
+
+        Iterator<Plants> iterator = cell.listPlant.iterator();
+        while (iterator.hasNext() && requiredFood > 0) {
+            Plants plant = iterator.next();
+            double available = plant.getWeight();
+
+            if (available <= requiredFood) {
+                consumed += available;
+                requiredFood -= available;
+                iterator.remove();
+                System.out.println(this.getClass().getSimpleName() + " съел растение весом " + available);
+
+            } else {
+                consumed += requiredFood;
+                plant.setWeight((int) (available - requiredFood));
+                System.out.println(this.getClass().getSimpleName() + " съел часть растения весом " + requiredFood);
+                requiredFood = 0;
+
+            }
+        }
+
+        if (consumed == 0) {
+            System.out.println(this.getClass().getSimpleName() + " не нашел растений для еды.");
+        }
+
+        return consumed;
+    }
+
+    private double huntAnimals(Cell cell, double requiredFood) {
+        double consumed = 0;
+
+        Iterator<Animals> iterator = cell.listAnimal.iterator();
+        while (iterator.hasNext() && requiredFood > 0) {
+            Animals prey = iterator.next();
+
+            // Проверяем вероятность поедания
+            Integer chance = this.getProbabilityEaten().get(prey.getClass().getSimpleName());
+            if (chance != null && ThreadLocalRandom.current().nextInt(100) < chance) {
+                consumed += prey.getWeight();
+                iterator.remove(); // Жертва съедена
+                requiredFood -= prey.getWeight();
+                System.out.println(this.getClass().getSimpleName() + " съел " + prey.getClass().getSimpleName()
+                        + " весом " + prey.getWeight());
+            } else {
+                System.out.println(this.getClass().getSimpleName() + " не смог поймать " + prey.getClass().getSimpleName());
+            }
+        }
+
+        if (consumed == 0) {
+            System.out.println(this.getClass().getSimpleName() + " не нашел животных для еды.");
+        }
+
+        return consumed;
     }
 
     // Переместиться в другую локацию
-    public void move(Island island)
-    {
+    public void move(Island island) {
         lock.lock();
         try {
-            Cell[][] islandArrays = island.islandArray;
-            for (int i = 0; i < islandArrays.length; i++) {
-                for (int j = 0; j < islandArrays.length; j++) {
-                    if (islandArrays[i][j].listAnimal.contains(this)) {
-                        int randomStep = ThreadLocalRandom.current().nextInt(0, this.maxSpeed + 1);
-                        int randomDirection = ThreadLocalRandom.current().nextInt(1, 9);
-                        int newI = i;
-                        int newJ = j;
-                        switch (randomDirection) {
-                            case 1 -> newI -= randomStep; // Вверх
-                            case 2 -> {
-                                newI -= randomStep;
-                                newJ += randomStep;
-                            } // Вверх вправо
-                            case 3 -> newJ += randomStep; // Вправо
-                            case 4 -> {
-                                newI += randomStep;
-                                newJ += randomStep;
-                            } // Вниз вправо
-                            case 5 -> newI += randomStep; // Вниз
-                            case 6 -> {
-                                newI += randomStep;
-                                newJ -= randomStep;
-                            } // Вниз влево
-                            case 7 -> newJ -= randomStep; // Влево
-                            case 8 -> {
-                                newI -= randomStep;
-                                newJ -= randomStep;
-                            } // Вверх влево
-                        }
-                        newI = (newI + islandArrays.length) % islandArrays.length;
-                        newJ = (newJ + islandArrays[i].length) % islandArrays[i].length;
-                        int sizeAnimal = islandArrays[newI][newJ].listAnimal.stream().filter(animal -> this.getClass()
-                                .equals(animal.getClass())).toList().size();
-                        if (sizeAnimal >= this.countOnOneCell) {
-                            return;
-                        }
-                        islandArrays[newI][newJ].listAnimal.add(this);
-                        islandArrays[i][j].listAnimal.remove(this);
-                        return;
+            // Найти текущую клетку, в которой находится животное
+            Cell currentCell = findCurrentCell(island);
+            if (currentCell == null) return;
+
+            int currentRow = -1;
+            int currentCol = -1;
+
+            // Найти индексы текущей клетки в массиве islandArray
+            boolean flag = false;
+            for (int i = 0; i < island.islandArray.length; i++) {
+                for (int j = 0; j < island.islandArray[i].length; j++) {
+                    if (island.islandArray[i][j] == currentCell) {
+                        currentRow = i;
+                        currentCol = j;
+                        flag = true;
                     }
                 }
+                if (flag) break;
             }
-        } catch (ArrayIndexOutOfBoundsException e) {
+
+            if (currentRow == -1 || currentCol == -1) return; // Не удалось найти текущую клетку
+
+            // Случайный шаг и направление
+            int randomStep = ThreadLocalRandom.current().nextInt(0, maxSpeed + 1);
+            Direction direction = Direction.randomDirection();
+
+            // Рассчитать новые координаты
+            int newRow = (currentRow + direction.getDeltaRow() * randomStep + island.islandArray.length) % island.islandArray.length;
+            int newCol = (currentCol + direction.getDeltaCol() * randomStep + island.islandArray[currentRow].length) % island.islandArray[currentRow].length;
+
+            // Переместить животное, если в новой клетке есть место
+            Cell targetCell = island.islandArray[newRow][newCol];
+            if (targetCell.listAnimal.size() < countOnOneCell) {
+                currentCell.listAnimal.remove(this);
+                targetCell.listAnimal.add(this);
+            }
         } finally {
             lock.unlock();
         }
     }
 
-    //Выбрать направление
-    // Рандомно выбирается направление движения животного
-    public Direction chooseDirection()
-    {
-        final int ORIGIN = 1;
-        final int BOUND = 4;
-        Direction direction = null;
-        int chooseDirectionRandom = ThreadLocalRandom.current().nextInt(ORIGIN, BOUND + 1);
-        switch (chooseDirectionRandom)
-        {
-            case 1:
-                direction = Direction.UP;
-                break;
-            case 2:
-                direction = Direction.RIGHT;
-                break;
-            case 3:
-                direction = Direction.DOWN;
-                break;
-            case 4:
-                direction = Direction.LEFT;
-                break;
+    private Cell findCurrentCell(Island island) {
+        for (Cell[] row : island.islandArray) {
+            for (Cell cell : row) {
+                if (cell.listAnimal.contains(this)) {
+                    return cell;
+                }
+            }
         }
-        return direction;
+        return null; // Если животное не найдено в острове
     }
+
     //Размножение
-    public void reproduce(Cell cell)
-    {
+    public void reproduce(Cell cell) {
         lock.lock();
         try {
-            CopyOnWriteArrayList<Animals> listAnimal = cell.listAnimal;
+            long countSameAnimals = cell.listAnimal.stream()
+                    .filter(animal -> this.getClass().equals(animal.getClass()))
+                    .count();
+
+            if (countSameAnimals >= countOnOneCell) {
+                System.out.println(this.getClass().getSimpleName() + ": Клетка переполнена для этого типа.");
+                return;
+            }
+
             int randomNum = ThreadLocalRandom.current().nextInt(1, 101);
-            if (randomNum >= 10) {
-                int sizeIndividual = listAnimal.stream().filter(count -> this.getClass()
-                        .equals(count.getClass())).toList().size();
-                if (sizeIndividual < 2) {
-                    return;
-                }
-                if (sizeIndividual >= countOnOneCell) {
-                    return;
-                }
-                String simpleName = this.getClass().getSimpleName();
-                listAnimal.add(AnimalFactory.giveBirthAnimal(simpleName));
+            if (randomNum < 50) { // Шанс на размножение 50%
+                System.out.println(this.getClass().getSimpleName() + ": Шанс на размножение не выпал.");
+                return;
+            }
+
+            Animals baby = AnimalFactory.giveBirthAnimal(this.getClass().getSimpleName());
+            if (baby != null) {
+                cell.listAnimal.add(baby);
+                System.out.println(this.getClass().getSimpleName() + ": Успешное размножение. Рождено новое животное.");
+            } else {
+                System.err.println("Ошибка при создании потомства для: " + this.getClass().getSimpleName());
             }
         } finally {
             lock.unlock();
         }
     }
+
     //Смерть
-    public void die(Animals animal, Cell cell)
-    {
+    public void die(Cell cell) {
         lock.lock();
         try {
-            if (this.actualSatiety <= 0) {
-                cell.listAnimal.remove(animal);
+            // Проверяем, достаточно ли сытости для выживания
+            if (actualSatiety <= 0) {
+                if (cell.listAnimal.contains(this)) {
+                    cell.listAnimal.remove(this); // Удаляем животное из клетки
+                }
             }
         } finally {
             lock.unlock();
         }
-
     }
-
 }
