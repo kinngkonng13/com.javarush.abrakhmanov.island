@@ -35,7 +35,6 @@ public class IslandInitialization {
         List<Animals> animals = new ArrayList<>();
         for (int i = 0; i < ThreadLocalRandom.current().nextInt(maxCount); i++) {
             try {
-                // Используем клон, чтобы создать независимый объект
                 animals.add((Animals) prototype.clone());
             } catch (CloneNotSupportedException e) {
                 e.printStackTrace();

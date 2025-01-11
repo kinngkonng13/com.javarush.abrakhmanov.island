@@ -195,17 +195,17 @@ public abstract class Animals implements Cloneable {
             }
 
             int randomNum = ThreadLocalRandom.current().nextInt(1, 101);
-            if (randomNum < 50) { // Шанс на размножение 50%
+            if (randomNum < 20) { // Шанс на размножение 20%
                 //System.out.println(this.getClass().getSimpleName() + ": Шанс на размножение не выпал.");
                 return;
             }
 
             Animals baby = AnimalFactory.giveBirthAnimal(this.getClass().getSimpleName());
-            if (baby != null) {
+            if (baby != null && countSameAnimals > 2) {
                 cell.listAnimal.add(baby);
                 //System.out.println(this.getClass().getSimpleName() + ": Успешное размножение. Рождено новое животное.");
             } else {
-                System.err.println("Ошибка при создании потомства для: " + this.getClass().getSimpleName());
+                //System.err.println("Ошибка при создании потомства для: " + this.getClass().getSimpleName());
             }
         } finally {
             lock.unlock();
